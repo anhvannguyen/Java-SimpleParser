@@ -19,6 +19,12 @@ public class DataParser {
 	public static void main(String[] args) throws FileNotFoundException {
 		String fileName = "rortest.csv";	// The name of the file to parse in
 		
+		// Sample lines from the text file, used for testing
+		String sample1 = "\"Sep 17, 2014 06:42 PM\",1,MatchDetails,,1.0.2,iPhone,Apple iPad 4th Gen (Wi-Fi Only),,\"{ CurrentLevel : 0;  MatchCombo : 3R,3P;  MatchCurrentTurn : 1}\",";
+		String sample2 = "\"Sep 17, 2014 06:42 PM\",7,MatchDetails,,1.0.2,iPhone,Apple iPad 4th Gen (Wi-Fi Only),,\"{ CurrentLevel : 0;  MatchCombo : 5B,5X,6X;  MatchCurrentTurn : 1}\",";
+		String sample3 = "\"Sep 17, 2014 05:30 PM\",1,MatchDetails,,1.0.2,iPhone,Apple iPad 4th Gen (Wi-Fi Only),,\"{ CurrentLevel : 0;  MatchCombo : 3P;  MatchCurrentTurn : 1}\",";
+		
+		
 		DataParser parser = new DataParser();
 		parser.processFile(fileName);
 		parser.printResult();
@@ -65,8 +71,7 @@ public class DataParser {
 		 * ,
 		 */	
 		String[] splitString = line.split("\"");
-		//if (splitString.length < 4)
-		//	return;
+
 		// Since we didn't have a way to identify individual user, we used the date string.
 		// The date generated is when the file is made, so similar date represents the 
 		// same user.  At the time, this was in our test phase and there are a limited
