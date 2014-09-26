@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -59,9 +61,22 @@ public class DataParser {
 	 * Line parser that splits up the data into a more usable format
 	 */
 	public void parseLineData(String line) {
-		// Example of data after we split the string, the data we needed is from the
-		// 2nd and 4th line which is the date and the game data.
-		// 
+		Pattern pattern = Pattern.compile("MatchCombo : ");
+		Matcher matcher = pattern.matcher(line);
+		
+		String endString = "";
+		boolean found = false;
+		
+		while(matcher.find()) {
+			// Get the string after our matching pattern
+			endString = line.substring(matcher.end());
+			found = true;
+		}
+		
+		// data is not the correct we need, no need to parse
+		if (!found) {
+			return;
+		}
 		
 		/* *** Sample Data ***
 		 * (blank line)
@@ -69,7 +84,8 @@ public class DataParser {
 		 * ,1,MatchDetails,,1.0.2,iPhone,Apple iPad 4th Gen (Wi-Fi Only),, 
 		 * { CurrentLevel : 0; MatchCombo : 3R,3P; MatchCurrentTurn : 1} 
 		 * ,
-		 */	
+		 */
+		// Take the original line and split all items between " (quote)
 		String[] splitString = line.split("\"");
 
 		// Since we didn't have a way to identify individual user, we used the date string.
@@ -78,22 +94,10 @@ public class DataParser {
 		// numbers of user and overlap is unlikely to happen but still possible.
 		String user = splitString[1];
 		
-		// The 4th item in the array has the actual user game data.  Now we removed all
-		// the blank space and split the data. We only need the 2nd item that
-		// has the "MatchCombo"
-		/* *** Sample Data ***
-		 * {CurrentLevel:0
-		 *	MatchCombo:3R,3P
-		 *	MatchCurrentTurn:1}
-		 */
-		String[] userData = splitString[3].replaceAll("\\s+", "").split(";");
 		
-		// With the MatchCombo line, we only need to get the item to the right of colon (":").
-		/* *** Sample Data ***
-		 * MatchCombo:3R,3P
-		 */
-		String[] comboData = userData[1].split(":");
-		String combo = comboData[1];
+		
+		String[] comboData = endString.split(";");
+		String combo = comboData[0];
 		
 		// Have the user manager add the result to the list
 		userManager.add(user, combo);
