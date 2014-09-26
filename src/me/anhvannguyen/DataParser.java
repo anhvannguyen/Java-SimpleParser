@@ -94,8 +94,7 @@ public class DataParser {
 		// numbers of user and overlap is unlikely to happen but still possible.
 		String user = splitString[1];
 		
-		
-		
+		// Get the combo data, which is the string after "Match Combo :"
 		String[] comboData = endString.split(";");
 		String combo = comboData[0];
 		
